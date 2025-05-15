@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 17 Matchups</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --accent-color: #a71db9d3;
+            --button-bg: #333333;
+            --button-hover: #444444;
+            --border-color: #555555;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        h1, h2 {
+            color: var(--accent-color);
+        }
+
+        #question {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .choice-btn {
+            padding: 0.75rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .choice-btn:hover {
+            background-color: var(--button-hover);
+        }
+
+        #timer, #score {
+            margin: 0.5rem 0;
+        }
+
+        #start {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s ease;
+        }
+
+        #start:hover {
+            background-color: var(--button-hover);
+        }
+
+        #results {
+            margin-top: 2rem;
+        }
+
+        #results p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Week 17 Matchups</h1>
+    <button id="start">Start</button>
+    <div id="timer" hidden>Time: <span id="time">0.00</span>s</div>
+    <div id="score" hidden>Score: <span id="correct">0</span>/<span id="total">0</span></div>
+    <div id="question-area" hidden>
+        <div id="question"></div>
+        <div class="choices">
+           
+        </div>
+    </div>
+    <div id="results" hidden>
+        <!-- <h2 style="color: var(--accent-color); font-size: 2rem; text-align: center;">🎉 All done! 🎉</h2> -->
+        <p style="font-size: 1.5rem; text-align: center;">Your score: <span id="final-score" style="font-weight: bold; color: var(--accent-color);"></span></p>
+        <p style="font-size: 1.5rem; text-align: center;">Time: <span id="final-time" style="font-weight: bold; color: var(--accent-color);"></span>s</p>
+        <button id="restart" style="margin-top: 1rem; padding: 0.75rem 1.5rem; font-size: 1rem; cursor: pointer; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--button-bg); color: var(--text-color); transition: background-color 0.3s ease;">Play Again</button>
+    </div>
+
+    <script>
+        const matchups = [
+        { team1: 'DAL', team2: 'WAS', logo1: 'logos/DAL.png', logo2: 'logos/WAS.png' },
+        { team1: 'DET', team2: 'MIN', logo1: 'logos/DET.png', logo2: 'logos/MIN.png' },
+        { team1: 'DEN', team2: 'KC', logo1: 'logos/DEN.png', logo2: 'logos/KC.png' },
+        { team1: 'SEA', team2: 'CAR', logo1: 'logos/SEA.png', logo2: 'logos/CAR.png' },
+        { team1: 'ARI', team2: 'CIN', logo1: 'logos/ARI.png', logo2: 'logos/CIN.png' },
+        { team1: 'BAL', team2: 'GB', logo1: 'logos/BAL.png', logo2: 'logos/GB.png' },
+        { team1: 'HOU', team2: 'LAC', logo1: 'logos/HOU.png', logo2: 'logos/LAC.png' },
+        { team1: 'NYG', team2: 'LV', logo1: 'logos/NYG.png', logo2: 'logos/LV.png' },
+        { team1: 'PIT', team2: 'CLE', logo1: 'logos/PIT.png', logo2: 'logos/CLE.png' },
+        { team1: 'JAX', team2: 'IND', logo1: 'logos/JAX.png', logo2: 'logos/IND.png' },
+        { team1: 'TB', team2: 'MIA', logo1: 'logos/TB.png', logo2: 'logos/MIA.png' },
+        { team1: 'NE', team2: 'NYJ', logo1: 'logos/NE.png', logo2: 'logos/NYJ.png' },
+        { team1: 'NO', team2: 'TEN', logo1: 'logos/NO.png', logo2: 'logos/TEN.png' },
+        { team1: 'PHI', team2: 'BUF', logo1: 'logos/PHI.png', logo2: 'logos/BUF.png' },
+        { team1: 'CHI', team2: 'SF', logo1: 'logos/CHI.png', logo2: 'logos/SF.png' },
+        { team1: 'LAR', team2: 'ATL', logo1: 'logos/LAR.png', logo2: 'logos/ATL.png' }
+        ];
+
+        function showNext() {
+            if (currentIndex >= shuffled.length) {
+            endGame();
+            return;
+            }
+            const correctPair = shuffled[currentIndex];
+            const wrongPairs = matchups.filter(m => m !== correctPair);
+            shuffle(wrongPairs);
+            const choices = [correctPair, wrongPairs[0], wrongPairs[1], wrongPairs[2]];
+            shuffle(choices);
+
+            questionEl.innerHTML = `
+            <img src="${correctPair.logo1}" alt="${correctPair.team1}" style="width: 100px; height: auto;">
+            vs
+            <img src="${correctPair.logo2}" alt="${correctPair.team2}" style="width: 100px; height: auto;">
+            `;
+            choicesContainer.innerHTML = '';
+            choices.forEach(pair => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.textContent = pair.team2;
+            btn.onclick = () => selectAnswer(pair.team2 === correctPair.team2);
+            choicesContainer.appendChild(btn);
+            });
+        }
+        let shuffled, currentIndex, correctCount, startTime;
+
+        const startBtn = document.getElementById('start');
+        const timerEl = document.getElementById('timer');
+        const timeEl = document.getElementById('time');
+        const scoreEl = document.getElementById('score');
+        const correctEl = document.getElementById('correct');
+        const totalEl = document.getElementById('total');
+        const questionArea = document.getElementById('question-area');
+        const questionEl = document.getElementById('question');
+        const choicesContainer = document.querySelector('.choices');
+        const results = document.getElementById('results');
+
+        function shuffle(array) {
+            return array.sort(() => 0.5 - Math.random());
+        }
+
+        function startGame() {
+            startBtn.hidden = true;
+            timerEl.hidden = false;
+            scoreEl.hidden = false;
+            questionArea.hidden = false;
+            results.hidden = true;
+
+            shuffled = shuffle([...matchups]);
+            currentIndex = 0;
+            correctCount = 0;
+            correctEl.textContent = correctCount;
+            totalEl.textContent = matchups.length;
+            startTime = performance.now();
+            updateTimer();
+            showNext();
+        }
+
+        function updateTimer() {
+            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+            timeEl.textContent = elapsed;
+            requestAnimationFrame(updateTimer);
+        }
+
+        function showNext() {
+            if (currentIndex >= shuffled.length) {
+            endGame();
+            return;
+            }
+            const correctPair = shuffled[currentIndex];
+            const wrongPairs = matchups.filter(m => m !== correctPair);
+            shuffle(wrongPairs);
+            const choices = [correctPair, wrongPairs[0], wrongPairs[1], wrongPairs[2]];
+            shuffle(choices);
+
+            questionEl.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+            <img src="${correctPair.logo1}" alt="${correctPair.team1}" style="width: 120px; height: auto;">
+            <span style="font-size: 1.5rem; font-weight: bold;">vs</span>
+
+            </div>
+            `;
+            choicesContainer.innerHTML = '';
+            choices.forEach(pair => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerHTML = `<img src="${pair.logo2}" alt="${pair.team2}" style="width: 120px; height: auto;">`;
+            btn.style.display = 'block'; // Ensure each button is on its own row
+            btn.style.padding = '.5rem'; // Increase button padding
+            btn.onclick = () => selectAnswer(pair.team2 === correctPair.team2);
+            choicesContainer.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(isCorrect) {
+            if (isCorrect) correctCount++;
+            correctEl.textContent = correctCount;
+            currentIndex++;
+            showNext();
+        }
+
+        function endGame() {
+            questionArea.hidden = true;
+            results.hidden = false;
+            const totalTime = ((performance.now() - startTime) / 1000).toFixed(2);
+            document.getElementById('final-score').textContent = `${correctCount}/${matchups.length}`;
+            document.getElementById('final-time').textContent = totalTime;
+            timerEl.hidden = true;
+            scoreEl.hidden = true;
+        }
+
+        startBtn.addEventListener('click', startGame);
+
+        const restartBtn = document.getElementById('restart');
+        restartBtn.addEventListener('click', () => {
+            results.hidden = true;
+            startGame();
+        });
+    </script>
+</body>
+</html>
