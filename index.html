@@ -9,6 +9,7 @@
             --bg-color: #121212;
             --text-color: #ffffff;
             --accent-color: #a71db9d3;
+            --score-color: #11e434;
             --button-bg: #333333;
             --button-hover: #444444;
             --border-color: #555555;
@@ -96,30 +97,29 @@
         </div>
     </div>
     <div id="results" hidden>
-        <!-- <h2 style="color: var(--accent-color); font-size: 2rem; text-align: center;">🎉 All done! 🎉</h2> -->
-        <p style="font-size: 1.5rem; text-align: center;">Your score: <span id="final-score" style="font-weight: bold; color: var(--accent-color);"></span></p>
-        <p style="font-size: 1.5rem; text-align: center;">Time: <span id="final-time" style="font-weight: bold; color: var(--accent-color);"></span>s</p>
-        <button id="restart" style="margin-top: 1rem; padding: 0.75rem 1.5rem; font-size: 1rem; cursor: pointer; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--button-bg); color: var(--text-color); transition: background-color 0.3s ease;">Play Again</button>
+        <p style="font-size: 2rem; text-align: center;">Your score: <span id="final-score" style="font-weight: bold; color: var(--score-color);"></span></p>
+        <p style="font-size: 1.5rem; text-align: center;">Time: <span id="final-time" style="font-weight: bold; color: var(--score-color);"></span>s</p>
+        <button id="restart" style="margin-top: 1rem; padding: 0.75rem 2.5rem; font-size: 1rem; cursor: pointer; border: 1px solid var(--border-color); border-radius: 8px; background-color: #b90de9; color: var(--text-color); transition: background-color 0.3s ease; width: 300px;">Play Again</button>
     </div>
 
     <script>
         const matchups = [
-        { team1: 'DAL', team2: 'WAS', logo1: 'logos/DAL.png', logo2: 'logos/WAS.png' },
-        { team1: 'DET', team2: 'MIN', logo1: 'logos/DET.png', logo2: 'logos/MIN.png' },
-        { team1: 'DEN', team2: 'KC', logo1: 'logos/DEN.png', logo2: 'logos/KC.png' },
-        { team1: 'SEA', team2: 'CAR', logo1: 'logos/SEA.png', logo2: 'logos/CAR.png' },
-        { team1: 'ARI', team2: 'CIN', logo1: 'logos/ARI.png', logo2: 'logos/CIN.png' },
-        { team1: 'BAL', team2: 'GB', logo1: 'logos/BAL.png', logo2: 'logos/GB.png' },
-        { team1: 'HOU', team2: 'LAC', logo1: 'logos/HOU.png', logo2: 'logos/LAC.png' },
-        { team1: 'NYG', team2: 'LV', logo1: 'logos/NYG.png', logo2: 'logos/LV.png' },
-        { team1: 'PIT', team2: 'CLE', logo1: 'logos/PIT.png', logo2: 'logos/CLE.png' },
-        { team1: 'JAX', team2: 'IND', logo1: 'logos/JAX.png', logo2: 'logos/IND.png' },
-        { team1: 'TB', team2: 'MIA', logo1: 'logos/TB.png', logo2: 'logos/MIA.png' },
-        { team1: 'NE', team2: 'NYJ', logo1: 'logos/NE.png', logo2: 'logos/NYJ.png' },
-        { team1: 'NO', team2: 'TEN', logo1: 'logos/NO.png', logo2: 'logos/TEN.png' },
-        { team1: 'PHI', team2: 'BUF', logo1: 'logos/PHI.png', logo2: 'logos/BUF.png' },
-        { team1: 'CHI', team2: 'SF', logo1: 'logos/CHI.png', logo2: 'logos/SF.png' },
-        { team1: 'LAR', team2: 'ATL', logo1: 'logos/LAR.png', logo2: 'logos/ATL.png' }
+        { team1: 'BAL', team2: 'CIN', logo1: 'logos/BAL.png', logo2: 'logos/CIN.png' },
+        { team1: 'ARI', team2: 'LV', logo1: 'logos/ARI.png', logo2: 'logos/LV.png' },
+        { team1: 'ATL', team2: 'NO', logo1: 'logos/ATL.png', logo2: 'logos/NO.png' },
+        { team1: 'BUF', team2: 'MIA', logo1: 'logos/BUF.png', logo2: 'logos/MIA.png' },
+        { team1: 'CAR', team2: 'SEA', logo1: 'logos/CAR.png', logo2: 'logos/SEA.png' },
+        { team1: 'CHI', team2: 'DET', logo1: 'logos/CHI.png', logo2: 'logos/DET.png' },
+        { team1: 'CLE', team2: 'IND', logo1: 'logos/CLE.png', logo2: 'logos/IND.png' },
+        { team1: 'DAL', team2: 'NYG', logo1: 'logos/DAL.png', logo2: 'logos/NYG.png' },
+        { team1: 'DEN', team2: 'NE', logo1: 'logos/DEN.png', logo2: 'logos/NE.png' },
+        { team1: 'GB', team2: 'HOU', logo1: 'logos/GB.png', logo2: 'logos/HOU.png' },
+        { team1: 'JAX', team2: 'WAS', logo1: 'logos/JAX.png', logo2: 'logos/WAS.png' },
+        { team1: 'KC', team2: 'LAC', logo1: 'logos/KC.png', logo2: 'logos/LAC.png' },
+        { team1: 'LAR', team2: 'TB', logo1: 'logos/LAR.png', logo2: 'logos/TB.png' },
+        { team1: 'MIN', team2: 'NYJ', logo1: 'logos/MIN.png', logo2: 'logos/NYJ.png' },
+        { team1: 'PHI', team2: 'SF', logo1: 'logos/PHI.png', logo2: 'logos/SF.png' },
+        { team1: 'PIT', team2: 'TEN', logo1: 'logos/PIT.png', logo2: 'logos/TEN.png' }
         ];
 
         function showNext() {
@@ -171,6 +171,9 @@
             questionArea.hidden = false;
             results.hidden = true;
 
+            let correctAnswers = [];
+            let incorrectAnswers = [];
+
             shuffled = shuffle([...matchups]);
             currentIndex = 0;
             correctCount = 0;
@@ -187,6 +190,8 @@
             requestAnimationFrame(updateTimer);
         }
 
+        
+
         function showNext() {
             if (currentIndex >= shuffled.length) {
             endGame();
@@ -202,7 +207,6 @@
             <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
             <img src="${correctPair.logo1}" alt="${correctPair.team1}" style="width: 120px; height: auto;">
             <span style="font-size: 1.5rem; font-weight: bold;">vs</span>
-
             </div>
             `;
             choicesContainer.innerHTML = '';
@@ -212,13 +216,18 @@
             btn.innerHTML = `<img src="${pair.logo2}" alt="${pair.team2}" style="width: 120px; height: auto;">`;
             btn.style.display = 'block'; // Ensure each button is on its own row
             btn.style.padding = '.5rem'; // Increase button padding
-            btn.onclick = () => selectAnswer(pair.team2 === correctPair.team2);
+            btn.onclick = () => selectAnswer(pair.team2 === correctPair.team2, correctPair);
             choicesContainer.appendChild(btn);
             });
         }
 
-        function selectAnswer(isCorrect) {
-            if (isCorrect) correctCount++;
+        function selectAnswer(isCorrect, correctPair) {
+            if (isCorrect) {
+            correctCount++;
+            correctAnswers.push(correctPair);
+            } else {
+            incorrectAnswers.push(correctPair);
+            }
             correctEl.textContent = correctCount;
             currentIndex++;
             showNext();
@@ -232,7 +241,55 @@
             document.getElementById('final-time').textContent = totalTime;
             timerEl.hidden = true;
             scoreEl.hidden = true;
+
+            // Create a summary of each matchup
+            const summaryContainer = document.createElement('div');
+            summaryContainer.style.marginTop = '1rem';
+            summaryContainer.style.display = 'grid';
+            summaryContainer.style.gridTemplateColumns = '1fr';
+            summaryContainer.style.gap = '1rem';
+
+            // Display incorrect answers first
+            [...incorrectAnswers, ...correctAnswers].forEach((matchup) => {
+            const summaryItem = document.createElement('div');
+            summaryItem.style.display = 'flex';
+            summaryItem.style.alignItems = 'center';
+            summaryItem.style.justifyContent = 'space-between';
+            summaryItem.style.border = `4px solid ${incorrectAnswers.includes(matchup) ? 'red' : 'green'}`;
+            summaryItem.style.borderRadius = '8px';
+            summaryItem.style.padding = '0.5rem';
+            summaryItem.style.backgroundColor = 'var(--button-bg)';
+
+            const logos = document.createElement('div');
+            logos.style.display = 'flex';
+            logos.style.alignItems = 'center';
+            logos.style.justifyContent = 'space-between'; 
+            logos.style.gap = '1rem';
+            logos.style.width = '100%'; 
+
+            const logo1 = document.createElement('img');
+            logo1.src = matchup.logo1;
+            logo1.alt = matchup.team1;
+            logo1.style.width = '60px'; 
+            logo1.style.height = 'auto';
+
+            const logo2 = document.createElement('img');
+            logo2.src = matchup.logo2;
+            logo2.alt = matchup.team2;
+            logo2.style.width = '60px'; 
+            logo2.style.height = 'auto';
+
+            logos.appendChild(logo1);
+            logos.appendChild(logo2);
+
+            summaryItem.appendChild(logos);
+            summaryContainer.appendChild(summaryItem);
+            });
+
+            results.appendChild(summaryContainer);
         }
+
+    
 
         startBtn.addEventListener('click', startGame);
 
@@ -241,6 +298,7 @@
             results.hidden = true;
             startGame();
         });
+    
     </script>
 </body>
 </html>
